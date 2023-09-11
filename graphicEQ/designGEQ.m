@@ -8,7 +8,6 @@ function [sos, targetF] = designGEQ ( targetG )
 %
 % Inputs:
 %    targetG - target magnitude response in dB of size [10,1]
-%
 % Outputs:
 %    sos - Filter coefficients as SOS of size [10,6]
 %    targetF - Band Center frequencies of size [1,10]
@@ -52,7 +51,7 @@ prototypeGain = 10; % dB
 prototypeGainArray = prototypeGain * ones(numFreq+1,1);
 prototypeSOS = graphicEQ(centerOmega, shelvingOmega, R, prototypeGainArray);
 [G,prototypeH,prototypeW] = probeSOS (prototypeSOS, controlFrequencies, fftLen, fs);
-G = G / prototypeGain; % dB vs control frequencies
+G = G / prototypeGain; % interaction matrix: dB vs control frequencies
 
 % compute optimal parametric EQ gains
 % Either you can use a unconstrained linear solver or introduce gain bounds
@@ -66,3 +65,4 @@ opts = optimset('Display','off');
 optG = lsqlin(G, targetInterp, [],[],[],[], lowerBound, upperBound, [], opts);
 % optG = G\targetInterp; % unconstrained solution
 sos = graphicEQ( centerOmega, shelvingOmega, R, optG );
+

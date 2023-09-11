@@ -23,6 +23,8 @@ function [b,c,d,X,V] = completeAllpassFDN(A, varargin)
 % Example: 
 %    [b,c,d,X,V] = completeAllpassFDN(seriesAllpass(randn(3,1)))
 %
+% Required: Control System Toolbox (functions: dlyap)
+%
 % Author: Dr.-Ing. Sebastian Jiro Schlecht, 
 % Aalto University, Finland
 % email address: sebastian.schlecht@aalto.fi

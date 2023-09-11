@@ -17,7 +17,7 @@ cInd = 2:numel(fBands)-1; % center band indices
 % define FDN
 N = 8;
 numInput = 1;
-numOutput = 1;
+numOutput = 3;
 inputGain = ones(N,numInput);
 outputGain = ones(numOutput,N);
 direct = zeros(numOutput,numInput);
@@ -37,7 +37,7 @@ outputFilters = zSOS(permute(equalizationSOS,[3 4 1 2]) .* outputGain);
 rir = dss2impz(rirLen, delays, feedbackMatrix, inputGain, outputFilters, direct, 'absorptionFilters', zAbsorption);
 rir = rir ./ norm(rir);
 
-% compute FDN poles
+%% compute FDN poles
 [res, pol, directTerm, isConjugatePolePair,metaData] = dss2pr(delays, feedbackMatrix, inputGain, outputFilters, direct, 'absorptionFilters', zAbsorption);
 
 % estimate reverberation times 

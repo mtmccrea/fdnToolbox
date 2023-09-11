@@ -61,8 +61,28 @@ G = G / prototypeGain; % interaction matrix: dB vs control frequencies
 upperBound = [Inf, 2 * prototypeGain * ones(1,numFreq)];
 lowerBound = -upperBound;
 
+% disp('targetG size'); disp(size(targetG))
+% disp('G size'); disp(size(G))
+% disp('targetInterp size'); disp(size(targetInterp))
+
+% disp(G)
+% figure, plot(G)
+
 opts = optimset('Display','off');
 optG = lsqlin(G, targetInterp, [],[],[],[], lowerBound, upperBound, [], opts);
+% disp('optG size'); disp(size(optG));
+% optG
+
+% optG2 = pinv(G)*targetInterp;
+% disp('optG2 size'); disp(size(optG2))
+% optG2
+
+% optG3 = lsqlin( G./targetInterp, ones(size( targetInterp)), [],[],[],[], lowerBound, upperBound, [], opts);
+% optG3 = optG3 .* [targetG(1); targetG']
+% disp('optG size'); disp(size(optG3))
+% optG3
+
+
 % optG = G\targetInterp; % unconstrained solution
 sos = graphicEQ( centerOmega, shelvingOmega, R, optG );
 

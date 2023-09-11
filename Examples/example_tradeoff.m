@@ -19,10 +19,17 @@ gainPerSample = db2mag(RT602slope(2,fs));
 
 
 % We compare 3x3 settings
-% delays: short, medium, long
-% FDN size: small, medium, large
-Ns = [4 8 16];
-Ds = round((rand(1,16) + 0.5) .* [300; 1000; 3000]);
+Ns = [4 8 16]; % FDN size: small, medium, large
+Ds = round((rand(1,16) + 0.5) .* [300; 1000; 3000]); % delays: short, medium, long
+
+% {'orthogonal','Hadamard','circulant','Householder','parallel','series', ...
+%       'diagonalConjugated','tinyRotation','allpassInFDN','nestedAllpass', ...
+%           'SchroederReverberator','AndersonMatrix'};
+matrixType = 'Hadamard';
+matrixType = 'circulant';
+matrixType = 'allpassInFDN';
+matrixType = 'nestedAllpass';
+matrixType = 'AndersonMatrix';
 
 
 % generate impulse responses
@@ -34,15 +41,20 @@ for itN = 1:size(Ns,2)
         numInput = 1;
         numOutput = 1;
         g = diag(gainPerSample.^delays);
-        A = fdnMatrixGallery(N,'orthogonal') * g;
+        A = fdnMatrixGallery(N,matrixType) * g;
         B = ones(N,numInput);
         C = ones(numOutput,N);
         D = zeros(numOutput,numInput);
         
         rir(:,itN,itD) = dss2impz(irLen,delays,A,B,C,D); 
-
-        %audiowrite(sprintf('tradeoff_N%d_D%d.wav',N,round(mean(delays))),0.5*rir(:,itN,itD),fs);
+        
+        dir = sprintf('renders/FDNs/%s/', matrixType);
+        if ~exist(dir,'dir'), mkdir(dir); end
+        audiowrite( ...
+            sprintf('%stradeoff_N%d_D%d.wav',dir,N,round(mean(delays))), ...
+            0.5*rir(:,itN,itD),fs);
     end
+    % sprintf('/renders/FDNs/%s/tradeoff_N%d_D%d.wav',matrixType,N,round(mean(delays))), ...
 end
 
 

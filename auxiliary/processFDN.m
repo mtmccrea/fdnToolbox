@@ -69,7 +69,7 @@ end
 function output = computeFDNloop(input, delays, feedbackMatrix, inputGains, outputGains, extraMatrix, absorptionFilters)
 %% Compute the FDN time domain loop
 maxBlockSize = 2^12;
-blkSz = min([min(delays), maxBlockSize]);
+blkSz = min([min(delays), maxBlockSize])
 
 %% Convert to dfilt
 DelayFilters = feedbackDelay(maxBlockSize,delays);
@@ -91,25 +91,25 @@ while blockStart < inputLen
         blkInd = blockStart + (1:blkSz);
     end
     
-    block = input(blkInd,:);
+    block = input(blkInd,:);                                % read inblock of input samples
     
     %% Delays and Absorption
-    delayOutput = DelayFilters.getValues(blkSz);
+    delayOutput = DelayFilters.getValues(blkSz);            % read in delayed values
     if ~isempty(absorptionFilters)
-       delayOutput = absorptionFilters.filter(delayOutput); 
+       delayOutput = absorptionFilters.filter(delayOutput); % absorption filtering of delayed values
     end
     
     %% Feedback Matrices
-    feedback = FeedbackMatrix.filter(delayOutput);
+    feedback = FeedbackMatrix.filter(delayOutput);          % perform mixing matrix on absorption filter output
     if ~isempty(extraMatrix)
         feedback = extraMatrix.filter(feedback);
     end
     
     %% Input and Output
-    delayLineInput = InputGains.filter(block) + feedback;
-    DelayFilters.setValues(delayLineInput);
+    delayLineInput = InputGains.filter(block) + feedback;   % apply input gains to input and combine with (feedback) mixing matrix output
+    DelayFilters.setValues(delayLineInput);                 % write input into delay lines
     
-    output(blkInd,:) = OutputGains.filter(delayOutput);
+    output(blkInd,:) = OutputGains.filter(delayOutput);     % apply output gains to absorption-filtered, delayed values
     
     %% Move to next block
     DelayFilters.next(blkSz);

@@ -29,7 +29,7 @@ function output = processFDN(input, delays, A, B, C, D, varargin)
 
 %% Input Parser
 p = inputParser;
-p.addParameter('inputType','mergeInput',@(x) ischar(x) );
+p.addParameter('inputType','splitInput',@(x) ischar(x) );
 p.addParameter('extraMatrix',[]);
 p.addParameter('absorptionFilters',eye(numel(delays)));
 parse(p,varargin{:});
@@ -69,7 +69,7 @@ end
 function output = computeFDNloop(input, delays, feedbackMatrix, inputGains, outputGains, extraMatrix, absorptionFilters)
 %% Compute the FDN time domain loop
 maxBlockSize = 2^12;
-blkSz = min([min(delays), maxBlockSize])
+blkSz = min([min(delays), maxBlockSize]);
 
 %% Convert to dfilt
 DelayFilters = feedbackDelay(maxBlockSize,delays);

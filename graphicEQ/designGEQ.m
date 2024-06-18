@@ -30,7 +30,7 @@ function [sos, targetF] = designGEQ ( targetG )
 fs = 48000;
 fftLen = 2^16;
 
-centerFrequencies = [ 63, 125, 250, 500, 1000, 2000, 4000, 8000]; % Hz
+centerFrequencies = [ 63, 125, 250, 500, 1000, 2000, 4000, 8000]; % Hz (default)
 ShelvingCrossover = [46 11360]; % Hz
 numFreq = length(centerFrequencies) + length(ShelvingCrossover);
 shelvingOmega = hertz2rad(ShelvingCrossover, fs);
@@ -60,29 +60,20 @@ G = G / prototypeGain; % interaction matrix: dB vs control frequencies
 % curve.
 upperBound = [Inf, 2 * prototypeGain * ones(1,numFreq)];
 lowerBound = -upperBound;
-
-% disp('targetG size'); disp(size(targetG))
-% disp('G size'); disp(size(G))
-% disp('targetInterp size'); disp(size(targetInterp))
-
-% disp(G)
-% figure, plot(G)
-
 opts = optimset('Display','off');
 optG = lsqlin(G, targetInterp, [],[],[],[], lowerBound, upperBound, [], opts);
-% disp('optG size'); disp(size(optG));
+
+% optG = G\targetInterp; % unconstrained solution
 % optG
+
+sos = graphicEQ( centerOmega, shelvingOmega, R, optG );
 
 % optG2 = pinv(G)*targetInterp;
 % disp('optG2 size'); disp(size(optG2))
 % optG2
+% optG2 - optG 
 
 % optG3 = lsqlin( G./targetInterp, ones(size( targetInterp)), [],[],[],[], lowerBound, upperBound, [], opts);
 % optG3 = optG3 .* [targetG(1); targetG']
 % disp('optG size'); disp(size(optG3))
 % optG3
-
-
-% optG = G\targetInterp; % unconstrained solution
-sos = graphicEQ( centerOmega, shelvingOmega, R, optG );
-

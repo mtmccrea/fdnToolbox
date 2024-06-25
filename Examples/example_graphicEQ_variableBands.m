@@ -14,7 +14,7 @@
 fftLen = 2^16;
 fs = 48000;
 
-nBand = 6;
+nBand = 5;
 
 % Target gains and crossover frequencies of the bands. 
 % Note the lowest and highest bands are shelf filters
@@ -29,7 +29,7 @@ switch nBand
         R = 3;
     case 5
         targetG = [-1 1 -1 1 -1].';
-        f_shelf = [42 16000];
+        f_shelf = [42 6000];
         R = 3.5;
     case 3
         targetG = [-1 1 -1].';
@@ -40,7 +40,7 @@ end
 % fx = [63, 125, 250, 500, 1000, 2000, 4000, 8000, 11360];
 fx = round(logspace(log10(f_shelf(1)), log10(f_shelf(end)), nBand-1));
 
-targetG = 20 * targetG; % scale dynamic range of gains
+targetG = 10 * targetG; % scale dynamic range of gains
 % targetG = targetG * -1; % invert staggered gains
 
 % constrained uses a lsq solver so is more accurate, but has limited

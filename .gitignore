@@ -6,3 +6,5 @@ find_and_replace.m
 *.pdf
 
 *.asv
+
+/Examples/renders

@@ -43,6 +43,7 @@ for it = 1:length(matrixTypes)
     type = matrixTypes{it};
     figure(it); set(gcf,'color','w');
     plotMatrix(feedbackMatrix.(type))
+    title(type)
     caxis([-1 1])
     
     matlab2tikz_sjs(['./Plots/matrix_' type '.tikz'],plotConfig{:})

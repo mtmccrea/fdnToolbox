@@ -6,12 +6,13 @@ clear; clc; close all;
 
 addpath(genpath('./'))
 
-%% create dummy file in case matlab tikz is not present
-if isempty(which('matlab2tikz_sjs'))
-    fid = fopen('./Temporary/matlab2tikz_sjs.m', 'wt');
-    fprintf(fid, 'function matlab2tikz_sjs(varargin)');
-    fclose(fid);
-end
+% mtm - removed because breaks Matlab at startup
+% %% create dummy file in case matlab tikz is not present
+% if isempty(which('matlab2tikz_sjs'))
+%     fid = fopen('./Temporary/matlab2tikz_sjs.m', 'wt');
+%     fprintf(fid, 'function matlab2tikz_sjs(varargin)');
+%     fclose(fid);
+% end
 
 %% List File and Product dependencies
 % files = dir('./**/*.m');
